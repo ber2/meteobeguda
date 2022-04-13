@@ -12,7 +12,7 @@ from meteobeguda.transformer import (
     current_pressure,
     current_wind,
     current_rain,
-    utc_to_local_tz
+    utc_to_local_tz,
 )
 
 
@@ -134,11 +134,27 @@ def test_current_rain_values(name, expected_value, current_rn):
 @pytest.mark.parametrize(
     "tz,input_value,expected_value",
     [
-        ("Europe/London", pd.Timestamp("2022-02-13 09:00:00"), pd.Timestamp("2022-02-13 09:00:00", tz="Europe/London")),
-        ("Europe/Madrid", pd.Timestamp("2022-02-13 09:00:00"), pd.Timestamp("2022-02-13 10:00:00", tz="Europe/Madrid")),
-        ("Europe/London", pd.Timestamp("2022-04-13 09:00:00"), pd.Timestamp("2022-04-13 10:00:00", tz="Europe/London")),
-        ("Europe/Madrid", pd.Timestamp("2022-04-13 09:00:00"), pd.Timestamp("2022-04-13 11:00:00", tz="Europe/Madrid")),
-    ]
+        (
+            "Europe/London",
+            pd.Timestamp("2022-02-13 09:00:00"),
+            pd.Timestamp("2022-02-13 09:00:00", tz="Europe/London"),
+        ),
+        (
+            "Europe/Madrid",
+            pd.Timestamp("2022-02-13 09:00:00"),
+            pd.Timestamp("2022-02-13 10:00:00", tz="Europe/Madrid"),
+        ),
+        (
+            "Europe/London",
+            pd.Timestamp("2022-04-13 09:00:00"),
+            pd.Timestamp("2022-04-13 10:00:00", tz="Europe/London"),
+        ),
+        (
+            "Europe/Madrid",
+            pd.Timestamp("2022-04-13 09:00:00"),
+            pd.Timestamp("2022-04-13 11:00:00", tz="Europe/Madrid"),
+        ),
+    ],
 )
 def test_convert_utc_to_local_tz(tz, input_value, expected_value):
     input_s = pd.Series([input_value])
