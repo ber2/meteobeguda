@@ -4,9 +4,9 @@ from typing import Callable
 
 import typer
 
-from meteo_local.fetcher import get_last_two_days, get_last_eight_days
-from meteo_local.parser import parse_response, parse_timestamps
-from meteo_local.transformer import only_one_day
+from meteobeguda.fetcher import get_last_two_days, get_last_eight_days
+from meteobeguda.parser import parse_response, parse_timestamps
+from meteobeguda.transformer import only_one_day
 
 app = typer.Typer()
 
@@ -36,7 +36,7 @@ def extract(lookback: int = 1) -> None:
         df_one_day = only_one_day(df, date)
         path = "data/" + date.strftime("%Y/%m")
         os.system(f"mkdir -p {path}")
-        df_one_day.to_parquet(f"{path}/meteolocal-{date.isoformat()}.parquet")
+        df_one_day.to_parquet(f"{path}/meteobeguda-{date.isoformat()}.parquet")
 
 
 if __name__ == "__main__":

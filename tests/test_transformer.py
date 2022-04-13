@@ -1,6 +1,8 @@
 import datetime as dt
 from unittest import mock
 
+import pandas as pd
+
 import pytest
 
 from meteobeguda.transformer import (
@@ -10,6 +12,7 @@ from meteobeguda.transformer import (
     current_pressure,
     current_wind,
     current_rain,
+    utc_to_local_tz,
 )
 
 
@@ -126,3 +129,36 @@ def current_rn(eight_days):
 )
 def test_current_rain_values(name, expected_value, current_rn):
     check_dataclass_attr(current_rn, name, expected_value)
+
+
+@pytest.mark.parametrize(
+    "tz,input_value,expected_value",
+    [
+        (
+            "Europe/London",
+            pd.Timestamp("2022-02-13 09:00:00"),
+            pd.Timestamp("2022-02-13 09:00:00", tz="Europe/London"),
+        ),
+        (
+            "Europe/Madrid",
+            pd.Timestamp("2022-02-13 09:00:00"),
+            pd.Timestamp("2022-02-13 10:00:00", tz="Europe/Madrid"),
+        ),
+        (
+            "Europe/London",
+            pd.Timestamp("2022-04-13 09:00:00"),
+            pd.Timestamp("2022-04-13 10:00:00", tz="Europe/London"),
+        ),
+        (
+            "Europe/Madrid",
+            pd.Timestamp("2022-04-13 09:00:00"),
+            pd.Timestamp("2022-04-13 11:00:00", tz="Europe/Madrid"),
+        ),
+    ],
+)
+def test_convert_utc_to_local_tz(tz, input_value, expected_value):
+    input_s = pd.Series([input_value])
+    output_s = utc_to_local_tz(input_s, tz=tz)
+
+    assert output_s.shape[0] == 1
+    assert output_s.iloc[0] == expected_value

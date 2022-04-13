@@ -167,3 +167,8 @@ def current_rain(df: pd.DataFrame, date: dt.date = dt.date.today()) -> CurrentRa
     s_last = last_entry("timestamp", df)
     intensity = s_last.rain_intensity
     return CurrentRain(rain_today, rain_yesterday, total_rain, intensity)
+
+
+def utc_to_local_tz(s: pd.Series, tz: str = "Europe/Madrid") -> pd.Series:
+    localized = s.dt.tz_localize("UTC")
+    return localized.dt.tz_convert(tz)
