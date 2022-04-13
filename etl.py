@@ -4,9 +4,9 @@ from typing import Callable
 
 import typer
 
-from meteo_local.fetcher import get_last_two_days, get_last_eight_days
-from meteo_local.parser import parse_response, parse_timestamps
-from meteo_local.transformer import only_one_day
+from meteobeguda.fetcher import get_last_two_days, get_last_eight_days
+from meteobeguda.parser import parse_response, parse_timestamps
+from meteobeguda.transformer import only_one_day
 
 app = typer.Typer()
 
