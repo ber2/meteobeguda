@@ -11,32 +11,22 @@ from meteobeguda.transformer import (
     current_pressure,
     current_wind,
     current_rain,
+    utc_to_local_tz
 )
 from meteobeguda.plots import Plotter
 
 
-def load_local() -> pd.DataFrame:
-    with open("downld08.txt", "rb") as fp:
-        raw = fp.read()
-    df = parse_response(raw)
-    parse_timestamps(df)
-    return df
-
-
-# @st.cache(ttl=3600)
+@st.experimental_memo
 def load_live() -> pd.DataFrame:
     raw = get_last_eight_days()
     df = parse_response(raw)
     parse_timestamps(df)
+    df["timestamp"] = utc_to_local_tz(df["timestamp"])
     return df
 
 
-st.title("Meteo Local")
-
 data = load_live()
 plotter = Plotter(data)
-
-st.markdown(f"Darrera actualització: {data.timestamp.max()}")
 
 hour_str = lambda x: x.strftime("%H:%M")
 st.header("Temperatura")
@@ -98,3 +88,17 @@ col2.metric("Velocitat", f"10 km/h")
 col3.metric("Velocitat màxima", f"30 km/h")
 
 plotter.windspeed_line_plot()
+
+st.sidebar.markdown("# MeteoBeguda")
+refresh = st.sidebar.button("Refresca")
+
+st.sidebar.markdown(f"Darrera actualització: {data.timestamp.max()}")
+
+st.sidebar.markdown("## Notícia i agraïments")
+st.sidebar.markdown("Aquestes dades reflecteixen l'estat de la meteorologia en temps real a La Beguda Alta (Anoia; vegeu-ne la [wiki](https://ca.wikipedia.org/wiki/La_Beguda_Alta) i [ubicació](https://goo.gl/maps/bXLjN2ScLFrgbRor9)).")
+
+st.sidebar.markdown("L'origen de les dades és a la web [meteobeguda.cat](http://www.meteobeguda.cat), gestionada per Narcís Batlle, a qui n'agraïm la cessió desinteressada.")
+
+if refresh:
+    load_live.clear()
+
