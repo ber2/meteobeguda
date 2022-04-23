@@ -40,8 +40,12 @@ col1, col2, col3, col4 = st.columns(4)
 col1.metric(
     "", f"{current_temp['temperature']:.1f} C", delta=f"{current_temp['trend']:.1f} C"
 )
-col2.metric(f"Mínima {hour_str(current_temp['min_time'])}", f"{current_temp['min']:.1f} C")
-col3.metric(f"Màxima {hour_str(current_temp['max_time'])}", f"{current_temp['max']:.1f} C")
+col2.metric(
+    f"Mínima {hour_str(current_temp['min_time'])}", f"{current_temp['min']:.1f} C"
+)
+col3.metric(
+    f"Màxima {hour_str(current_temp['max_time'])}", f"{current_temp['max']:.1f} C"
+)
 col4.metric("Sensació", f"{current_temp['feels_like']:.1f} C")
 
 plotter.temperature_line_plot()
@@ -64,8 +68,12 @@ current_hum = current_humidity(data)
 
 col1, col2, col3 = st.columns(3)
 col1.metric("", f"{current_hum['perc']} %")
-col2.metric(f"Mínima {hour_str(current_hum['min_time'])}", f"{current_hum['min']:.1f} %")
-col3.metric(f"Màxima {hour_str(current_hum['max_time'])}", f"{current_hum['max']:.1f} %")
+col2.metric(
+    f"Mínima {hour_str(current_hum['min_time'])}", f"{current_hum['min']:.1f} %"
+)
+col3.metric(
+    f"Màxima {hour_str(current_hum['max_time'])}", f"{current_hum['max']:.1f} %"
+)
 
 plotter.humidity_line_plot()
 
@@ -73,7 +81,9 @@ st.header("Pressió atmosfèrica")
 current_press = current_pressure(data)
 
 col1, col2, col3 = st.columns(3)
-col1.metric("", f"{current_press['pressure']} hPa", delta=f"{current_press['trend']:.1f} hPa")
+col1.metric(
+    "", f"{current_press['pressure']} hPa", delta=f"{current_press['trend']:.1f} hPa"
+)
 col2.metric(
     f"Mínima {hour_str(current_press['min_time'])}", f"{current_press['min']:.1f} hPa"
 )
@@ -102,4 +112,3 @@ st.markdown(
 st.markdown(
     "L'origen de les dades és a la web [meteobeguda.cat](http://www.meteobeguda.cat), gestionada per Narcís Batlle, a qui n'agraïm la cessió desinteressada."
 )
-
