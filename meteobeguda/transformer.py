@@ -1,8 +1,11 @@
 import datetime as dt
-from dataclasses import dataclass
-from typing import Optional, Dict
+from dataclasses import dataclass, asdict, field
+from typing import Optional, Dict, Any
 
 import pandas as pd
+
+
+Response = Dict[str, Any]
 
 
 WIND_NAMES: Dict[str, str] = {
@@ -69,9 +72,10 @@ class CurrentWind:
     direction_deg: int
     speed: float
     maxspeed: float
+    name: str = field(init=False)
 
-    def name(self):
-        return WIND_NAMES[self.direction_str]
+    def __post_init__(self):
+        self.name = WIND_NAMES[self.direction_str]
 
 
 @dataclass
@@ -110,63 +114,71 @@ def only_one_day(df: pd.DataFrame, date: dt.date = dt.date.today()) -> pd.DataFr
     return df[mask].copy()
 
 
-def current_temperature(df: pd.DataFrame, date=dt.date.today()) -> CurrentTemperature:
+def current_temperature(df: pd.DataFrame, date=dt.date.today()) -> Response:
     df_today = only_one_day(df, date)
 
     s_last = last_entry("timestamp", df_today)
     trend = get_trend("temperature", df_today)
     mmd = get_max_min_time("timestamp", "temperature", df_today)
 
-    return CurrentTemperature(
-        s_last.temperature,
-        trend,
-        s_last.temperature_feeling,
-        mmd.max,
-        mmd.max_time,
-        mmd.min,
-        mmd.min_time,
+    return asdict(
+        CurrentTemperature(
+            s_last.temperature,
+            trend,
+            s_last.temperature_feeling,
+            mmd.max,
+            mmd.max_time,
+            mmd.min,
+            mmd.min_time,
+        )
     )
 
 
-def current_humidity(df: pd.DataFrame, date=dt.date.today()) -> CurrentHumidity:
+def current_humidity(df: pd.DataFrame, date=dt.date.today()) -> Response:
     df_today = only_one_day(df, date)
     s_last = last_entry("timestamp", df_today)
     mmd = get_max_min_time("timestamp", "humidity", df_today)
-    return CurrentHumidity(
-        s_last.humidity, int(mmd.max), mmd.max_time, int(mmd.min), mmd.min_time
+    return asdict(
+        CurrentHumidity(
+            s_last.humidity, int(mmd.max), mmd.max_time, int(mmd.min), mmd.min_time
+        )
     )
 
 
-def current_pressure(df: pd.DataFrame, date=dt.date.today()) -> CurrentPressure:
+def current_pressure(df: pd.DataFrame, date=dt.date.today()) -> Response:
     df_today = only_one_day(df, date)
 
     s_last = last_entry("timestamp", df_today)
     trend = get_trend("pressure", df_today)
     mmd = get_max_min_time("timestamp", "pressure", df_today)
 
-    return CurrentPressure(
-        s_last.pressure, trend, mmd.max, mmd.max_time, mmd.min, mmd.min_time
+    return asdict(
+        CurrentPressure(
+            s_last.pressure, trend, mmd.max, mmd.max_time, mmd.min, mmd.min_time
+        )
     )
 
 
-def current_wind(df: pd.DataFrame) -> CurrentWind:
+def current_wind(df: pd.DataFrame) -> Response:
     s_last = last_entry("timestamp", df)
-    return CurrentWind(
-        s_last.wind_direction,
-        s_last.tx_wind,
-        s_last.windspeed,
-        s_last.windspeed_max,
+    return asdict(
+        CurrentWind(
+            s_last.wind_direction,
+            s_last.tx_wind,
+            s_last.windspeed,
+            s_last.windspeed_max,
+        )
     )
 
 
-def current_rain(df: pd.DataFrame, date: dt.date = dt.date.today()) -> CurrentRain:
+def current_rain(df: pd.DataFrame, date: dt.date = dt.date.today()) -> Response:
 
     rain_today = df[df.timestamp.dt.date == date].rain.sum()
     rain_yesterday = df[df.timestamp.dt.date == (date - dt.timedelta(1))].rain.sum()
     total_rain = df.rain.sum()
     s_last = last_entry("timestamp", df)
     intensity = s_last.rain_intensity
-    return CurrentRain(rain_today, rain_yesterday, total_rain, intensity)
+    return asdict(CurrentRain(rain_today, rain_yesterday, total_rain, intensity))
 
 
 def utc_to_local_tz(s: pd.Series, tz: str = "Europe/Madrid") -> pd.Series:
