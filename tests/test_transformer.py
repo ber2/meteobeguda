@@ -97,7 +97,7 @@ def test_current_wind_values(current_wi):
         "direction_deg": 349,
         "speed": 0.0,
         "maxspeed": 3.2,
-        "name": "Mestral"
+        "name": "Mestral",
     }
     assert expected == current_wi
 

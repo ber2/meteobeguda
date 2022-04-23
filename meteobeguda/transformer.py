@@ -178,9 +178,7 @@ def current_rain(df: pd.DataFrame, date: dt.date = dt.date.today()) -> Response:
     total_rain = df.rain.sum()
     s_last = last_entry("timestamp", df)
     intensity = s_last.rain_intensity
-    return asdict(
-        CurrentRain(rain_today, rain_yesterday, total_rain, intensity)
-    )
+    return asdict(CurrentRain(rain_today, rain_yesterday, total_rain, intensity))
 
 
 def utc_to_local_tz(s: pd.Series, tz: str = "Europe/Madrid") -> pd.Series:
