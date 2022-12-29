@@ -16,6 +16,11 @@ from meteobeguda.transformer import (
 from meteobeguda.plots import Plotter
 
 
+st.set_page_config(
+    page_title="Meteobeguda",
+    page_icon=":sun_behind_rain_cloud:"
+)
+
 @st.cache(ttl=600)
 def load_live() -> pd.DataFrame:
     raw = get_last_eight_days()
