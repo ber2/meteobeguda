@@ -172,7 +172,6 @@ def current_wind(df: pd.DataFrame) -> Response:
 
 
 def current_rain(df: pd.DataFrame, date: dt.date = dt.date.today()) -> Response:
-
     rain_today = df[df.timestamp.dt.date == date].rain.sum()
     rain_yesterday = df[df.timestamp.dt.date == (date - dt.timedelta(1))].rain.sum()
     total_rain = df.rain.sum()
