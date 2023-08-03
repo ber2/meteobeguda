@@ -45,7 +45,6 @@ def current_rn(eight_days):
     "date", [dt.date(2022, 3, 12) - dt.timedelta(k) for k in range(8)]
 )
 def test_only_one_day(date, eight_days):
-
     result = only_one_day(eight_days, date)
     assert result.timestamp.dt.date.nunique() == 1
     assert date in result.timestamp.dt.date.unique()
