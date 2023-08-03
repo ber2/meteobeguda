@@ -19,7 +19,14 @@ from meteobeguda.plots import Plotter
 @st.cache(ttl=600)
 def load_live() -> pd.DataFrame:
     raw = get_last_eight_days()
-    df = parse_response(raw)
+    try:
+        df = parse_response(raw)
+    except IndexError as exc:
+        print(exc)
+        print("Data retrieved below:")
+        print(raw)
+        raise
+
     parse_timestamps(df)
     df["timestamp"] = utc_to_local_tz(df["timestamp"])
     return df
