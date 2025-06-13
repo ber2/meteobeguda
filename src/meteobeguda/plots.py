@@ -6,9 +6,6 @@ import plotly.express as px
 import streamlit as st
 
 
-from .transformer import only_one_day
-
-
 class Plotter:
     def __init__(self, df: pd.DataFrame):
         self.df = df
