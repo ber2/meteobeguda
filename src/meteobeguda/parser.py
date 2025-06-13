@@ -3,8 +3,6 @@ from io import BytesIO
 import pandas as pd
 import numpy as np
 
-from .fetcher import get_last_two_days
-
 
 COLUMNS = {
     "date": np.dtype("O"),

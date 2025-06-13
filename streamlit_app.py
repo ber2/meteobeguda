@@ -1,5 +1,3 @@
-import datetime as dt
-
 import streamlit as st
 import pandas as pd
 
@@ -16,7 +14,7 @@ from meteobeguda.transformer import (
 from meteobeguda.plots import Plotter
 
 
-@st.cache(ttl=600)
+@st.cache_data(ttl=600)
 def load_live() -> pd.DataFrame:
     raw = get_last_eight_days()
     try:

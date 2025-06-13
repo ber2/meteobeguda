@@ -1,12 +1,6 @@
-from unittest import mock
-
 import pytest
-from hypothesis import given
-import hypothesis.strategies as st
-import hypothesis.extra.numpy as st_np
 
 import pandas as pd
-import numpy as np
 
 from meteobeguda.parser import COLUMNS, parse_response, parse_timestamps
 
