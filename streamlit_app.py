@@ -1,3 +1,4 @@
+import datetime as dt
 import streamlit as st
 import pandas as pd
 
@@ -17,13 +18,10 @@ from meteobeguda.plots import Plotter
 @st.cache_data(ttl=600)
 def load_live() -> pd.DataFrame:
     raw = get_last_eight_days()
-    try:
-        df = parse_response(raw)
-    except IndexError as exc:
-        print(exc)
-        print("Data retrieved below:")
-        print(raw)
-        raise
+    if raw is None:
+        raise ValueError("Data source unavailable")
+
+    df = parse_response(raw)
 
     parse_timestamps(df)
     df["timestamp"] = utc_to_local_tz(df["timestamp"])
@@ -33,7 +31,10 @@ def load_live() -> pd.DataFrame:
 data = load_live()
 plotter = Plotter(data)
 
-hour_str = lambda x: x.strftime("%H:%M")
+
+def parse_hour(h: dt.datetime) -> str:
+    return h.strftime("%H:%M")
+
 
 st.markdown("# MeteoBeguda")
 st.markdown(f"Darrera actualització: {data.timestamp.max()}")
@@ -46,10 +47,10 @@ col1.metric(
     "", f"{current_temp['temperature']:.1f} C", delta=f"{current_temp['trend']:.1f} C"
 )
 col2.metric(
-    f"Mínima {hour_str(current_temp['min_time'])}", f"{current_temp['min']:.1f} C"
+    f"Mínima {parse_hour(current_temp['min_time'])}", f"{current_temp['min']:.1f} C"
 )
 col3.metric(
-    f"Màxima {hour_str(current_temp['max_time'])}", f"{current_temp['max']:.1f} C"
+    f"Màxima {parse_hour(current_temp['max_time'])}", f"{current_temp['max']:.1f} C"
 )
 col4.metric("Sensació", f"{current_temp['feels_like']:.1f} C")
 
@@ -74,10 +75,10 @@ current_hum = current_humidity(data)
 col1, col2, col3 = st.columns(3)
 col1.metric("", f"{current_hum['perc']} %")
 col2.metric(
-    f"Mínima {hour_str(current_hum['min_time'])}", f"{current_hum['min']:.1f} %"
+    f"Mínima {parse_hour(current_hum['min_time'])}", f"{current_hum['min']:.1f} %"
 )
 col3.metric(
-    f"Màxima {hour_str(current_hum['max_time'])}", f"{current_hum['max']:.1f} %"
+    f"Màxima {parse_hour(current_hum['max_time'])}", f"{current_hum['max']:.1f} %"
 )
 
 plotter.humidity_line_plot()
@@ -90,10 +91,10 @@ col1.metric(
     "", f"{current_press['pressure']} hPa", delta=f"{current_press['trend']:.1f} hPa"
 )
 col2.metric(
-    f"Mínima {hour_str(current_press['min_time'])}", f"{current_press['min']:.1f} hPa"
+    f"Mínima {parse_hour(current_press['min_time'])}", f"{current_press['min']:.1f} hPa"
 )
 col3.metric(
-    f"Màxima {hour_str(current_press['max_time'])}", f"{current_press['max']:.1f} hPa"
+    f"Màxima {parse_hour(current_press['max_time'])}", f"{current_press['max']:.1f} hPa"
 )
 
 plotter.pressure_line_plot()
