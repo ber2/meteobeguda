@@ -1,9 +1,0 @@
-name: Setup UV
-
-on:
-  workflow_call:
-
-jobs:
-  setup:
-    runs-on: ubuntu-latest
-    steps:
