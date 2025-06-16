@@ -56,6 +56,8 @@ col4.metric("Sensació", f"{current_temp['feels_like']:.1f} C")
 
 plotter.temperature_line_plot()
 
+plotter.temperature_daily_line_plot()
+
 st.header("Pluja")
 
 rain = current_rain(data)

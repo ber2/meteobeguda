@@ -21,6 +21,27 @@ class Plotter:
             "temperature", "Temperatura (C)", range_y=[-5.0, 45.0]
         )
 
+    def temperature_daily_line_plot(self):
+        d = self.df.copy()
+        d["date"] = d.timestamp.dt.date
+        d_agg = (
+            d.groupby("date")
+            .temperature.agg(["max", "mean", "min"])
+            .reset_index()
+            .rename(columns={"max": "Màxima", "mean": "Mitjana", "min": "Mínima"})
+        )
+        return st.plotly_chart(
+            px.line(
+                d_agg,
+                x="date",
+                y=["Màxima", "Mitjana", "Mínima"],
+                title="Temperatures diàries",
+                labels={"date": "Data", "value": "Temperatura"},
+                range_y=[-5.0, 45.0],
+                color_discrete_sequence=["red", "green", "blue"],
+            )
+        )
+
     def humidity_line_plot(self):
         return self._ts_line_plot("humidity", "Humitat (%)", range_y=[0.0, 100.0])
 
