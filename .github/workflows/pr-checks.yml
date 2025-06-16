@@ -4,91 +4,47 @@ on:
   - pull_request
 
 jobs:
+  pytest-setup:
+    uses: ./.github/workflows/setup-uv.yml
   pytest:
+    needs: pytest-setup
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Install uv
-      uses: astral-sh/setup-uv@v3
-      with:
-        enable-cache: true
-        cache-dependency-glob: "uv.lock"
-    - name: Set up Python 3.12
-      run: uv python install 3.12
-    - name: Install dependencies
-      run: |
-        uv sync --all-extras --dev
     - name: Pytest
-      run: |
-        uv run pytest -v --cov=src
+      run: uv run pytest -v --cov=src
 
+  ty-setup:
+    uses: ./.github/workflows/setup-uv.yml
   ty:
+    needs: ty-setup
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Install uv
-      uses: astral-sh/setup-uv@v3
-      with:
-        enable-cache: true
-        cache-dependency-glob: "uv.lock"
-    - name: Set up Python 3.12
-      run: uv python install 3.12
-    - name: Install dependencies
-      run: |
-        uv sync --all-extras --dev
-    - name: Ty
-      run: |
-        uv run ty check
+      - name: Ty
+        run: uv run ty check
 
+  ruff-setup:
+    uses: ./.github/workflows/setup-uv.yml
   ruff:
+    needs: ruff-setup
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Install uv
-      uses: astral-sh/setup-uv@v3
-      with:
-        enable-cache: true
-        cache-dependency-glob: "uv.lock"
-    - name: Set up Python 3.12
-      run: uv python install 3.12
-    - name: Install dependencies
-      run: |
-        uv sync --all-extras --dev
     - name: ruff
-      run: |
-        uv run ruff check .
+      run: uv run ruff check .
 
+  ruff-format-setup:
+    uses: ./.github/workflows/setup-uv.yml
   ruff-format:
+    needs: ruff-format-setup
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Install uv
-      uses: astral-sh/setup-uv@v3
-      with:
-        enable-cache: true
-        cache-dependency-glob: "uv.lock"
-    - name: Set up Python 3.12
-      run: uv python install 3.12
-    - name: Install dependencies
-      run: |
-        uv sync --all-extras --dev
     - name: ruff
-      run: |
-        uv run ruff format --check .
+      run: uv run ruff format --check .
+
+  bandit-setup:
+    uses: ./.github/workflows/setup-uv.yml
   bandit:
+    needs: bandit-setup
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Install uv
-      uses: astral-sh/setup-uv@v3
-      with:
-        enable-cache: true
-        cache-dependency-glob: "uv.lock"
-    - name: Set up Python 3.12
-      run: uv python install 3.12
-    - name: Install dependencies
-      run: |
-        uv sync --all-extras --dev
     - name: Bandit
-      run: |
-        uv run bandit .
+      run: uv run bandit .
