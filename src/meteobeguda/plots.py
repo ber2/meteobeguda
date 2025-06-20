@@ -21,26 +21,32 @@ class Plotter:
             "temperature", "Temperatura (C)", range_y=[-5.0, 45.0]
         )
 
-    def temperature_daily_line_plot(self):
+    def _daily_plot(
+        self,
+        value_col: str,
+        title: str,
+        y_label: str,
+        range_y: Optional[List[int]] = None,
+    ):
         d = self.df.copy()
         d["date"] = d.timestamp.dt.date
         d_agg = (
-            d.groupby("date")
-            .temperature.agg(["max", "mean", "min"])
+            d.groupby("date")[value_col]
+            .agg(["max", "mean", "min"])
             .reset_index()
             .rename(columns={"max": "Màxima", "mean": "Mitjana", "min": "Mínima"})
         )
-        return st.plotly_chart(
-            px.line(
-                d_agg,
-                x="date",
-                y=["Màxima", "Mitjana", "Mínima"],
-                title="Temperatures diàries",
-                labels={"date": "Data", "value": "Temperatura"},
-                range_y=[-5.0, 45.0],
-                color_discrete_sequence=["red", "green", "blue"],
-            )
+        fig = px.line(
+            d_agg,
+            x="date",
+            y=["Màxima", "Mitjana", "Mínima"],
+            title=title,
+            labels={"date": "Data", "value": y_label},
+            range_y=range_y,
+            color_discrete_sequence=["#EF553B", "#00CC96", "#636EFA"],
         )
+        fig.update_layout(showlegend=False)
+        return st.plotly_chart(fig)
 
     def humidity_line_plot(self):
         return self._ts_line_plot("humidity", "Humitat (%)", range_y=[0.0, 100.0])
@@ -81,3 +87,34 @@ class Plotter:
 
     def windspeed_line_plot(self):
         return self._ts_line_plot("windspeed_max", "Velocitat màxima del vent")
+
+    def temperature_daily_line_plot(self):
+        return self._daily_plot(
+            value_col="temperature",
+            title="Temperatures diàries",
+            y_label="Temperatura",
+            range_y=[-5.0, 45.0],
+        )
+
+    def humidity_daily_line_plot(self):
+        return self._daily_plot(
+            value_col="humidity",
+            title="Humitat diària",
+            y_label="Humitat (%)",
+            range_y=[0.0, 100.0],
+        )
+
+    def windspeed_daily_line_plot(self):
+        return self._daily_plot(
+            value_col="windspeed_max",
+            title="Velocitat màxima del vent diària",
+            y_label="Velocitat (km/h)",
+        )
+
+    def pressure_daily_line_plot(self):
+        return self._daily_plot(
+            value_col="pressure",
+            title="Pressió atmosfèrica diària",
+            y_label="Pressió (hPa)",
+            range_y=[980.0, 1030.0],
+        )
