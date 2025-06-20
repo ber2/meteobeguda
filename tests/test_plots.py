@@ -78,3 +78,46 @@ def test_rain_daily_bar_plot(mock_plotly_chart, plotter):
     fig = mock_plotly_chart.call_args[0][0]
     assert fig.data[0].type == "bar"
     assert "Pluja per dia" in fig.layout.title.text
+
+
+@mock.patch("streamlit.plotly_chart")
+def test_temperature_daily_line_plot(mock_plotly_chart, plotter):
+    plotter.temperature_daily_line_plot()
+    fig = mock_plotly_chart.call_args[0][0]
+    assert fig.data[0].type == "scatter"
+    assert fig.layout.title.text == "Temperatures diàries"
+    assert fig.layout.yaxis.title.text == "Temperatura"
+    assert fig.layout.yaxis.range == (-5.0, 45.0)
+    assert fig.layout.showlegend is False
+
+
+@mock.patch("streamlit.plotly_chart")
+def test_humidity_daily_line_plot(mock_plotly_chart, plotter):
+    plotter.humidity_daily_line_plot()
+    fig = mock_plotly_chart.call_args[0][0]
+    assert fig.data[0].type == "scatter"
+    assert fig.layout.title.text == "Humitat diària"
+    assert fig.layout.yaxis.title.text == "Humitat (%)"
+    assert fig.layout.yaxis.range == (0.0, 100.0)
+    assert fig.layout.showlegend is False
+
+
+@mock.patch("streamlit.plotly_chart")
+def test_pressure_daily_line_plot(mock_plotly_chart, plotter):
+    plotter.pressure_daily_line_plot()
+    fig = mock_plotly_chart.call_args[0][0]
+    assert fig.data[0].type == "scatter"
+    assert fig.layout.title.text == "Pressió atmosfèrica diària"
+    assert fig.layout.yaxis.title.text == "Pressió (hPa)"
+    assert fig.layout.yaxis.range == (980.0, 1030.0)
+    assert fig.layout.showlegend is False
+
+
+@mock.patch("streamlit.plotly_chart")
+def test_windspeed_daily_line_plot(mock_plotly_chart, plotter):
+    plotter.windspeed_daily_line_plot()
+    fig = mock_plotly_chart.call_args[0][0]
+    assert fig.data[0].type == "scatter"
+    assert fig.layout.title.text == "Velocitat màxima del vent diària"
+    assert fig.layout.yaxis.title.text == "Velocitat (km/h)"
+    assert fig.layout.showlegend is False
