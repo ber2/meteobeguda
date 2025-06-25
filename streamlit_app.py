@@ -57,11 +57,11 @@ if (data["rain"].fillna(0) > 0).any():
         col2.metric("Ahir", f"{rain['yesterday']:.1f} mm")
         col3.metric("Aquesta setmana", f"{rain['this_week']:.1f} mm")
         col1.metric("Intensitat", f"{rain['intensity']} mm / hora")
-        rain_tabs = st.tabs(["Per hora", "Per dia"])
+        rain_tabs = st.tabs(["Per dia", "Per hora"])
         with rain_tabs[0]:
-            plotter.rain_hourly_bar_plot()
-        with rain_tabs[1]:
             plotter.rain_daily_bar_plot()
+        with rain_tabs[1]:
+            plotter.rain_hourly_bar_plot()
 else:
     st.info("No s'ha registrat cap pluja en els darrers 8 dies.")
 
