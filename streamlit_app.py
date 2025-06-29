@@ -39,6 +39,9 @@ def parse_hour(h: dt.datetime) -> str:
 with st.sidebar:
     st.title("🌦️ MeteoBeguda")
     st.success(f"Darrera actualització: {data.timestamp.max()}")
+    if st.button("Refresca les dades"):
+        st.cache_data.clear()
+        st.rerun()
     st.markdown("### Notícia i agraïments")
     st.markdown(
         "Aquestes dades reflecteixen l'estat de la meteorologia en temps real a La Beguda Alta (Anoia; vegeu-ne la [wiki](https://ca.wikipedia.org/wiki/La_Beguda_Alta) i [ubicació](https://goo.gl/maps/bXLjN2ScLFrgbRor9))."

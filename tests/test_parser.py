@@ -46,7 +46,7 @@ def test_windspeed_max_is_higher_than_windspeed(parsed_df):
 def parsed_timestamps():
     input_data = {
         "date": ["5/03/2022", "11/03/2022", "9/2/1985"],
-        "time": ["18:00", "19:00", "06:30"],
+        "time": ["18:00", "19:00", "6:30"],
     }
     df = pd.DataFrame(input_data)
     parse_timestamps(df)
