@@ -52,9 +52,6 @@ def parse_response(raw: bytes) -> pd.DataFrame:
 
 def parse_timestamps(data: pd.DataFrame) -> None:
     data["timestamp"] = pd.to_datetime(
-        data["date"] + " " + data["time"],
-        format="mixed",
-        dayfirst=True,
-        errors="raise"
+        data["date"] + " " + data["time"], format="mixed", dayfirst=True, errors="raise"
     )
     data.drop(["date", "time"], axis=1, inplace=True)
