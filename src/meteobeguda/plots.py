@@ -58,7 +58,7 @@ class Plotter:
 
     def rain_hourly_bar_plot(self, date: dt.date = dt.date.today()):
         d = self.df.copy()
-        d_agg = d.resample("H", on="timestamp").rain.agg("sum").reset_index()
+        d_agg = d.resample("h", on="timestamp").rain.agg("sum").reset_index()
 
         return st.plotly_chart(
             px.bar(
